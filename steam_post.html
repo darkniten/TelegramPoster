@@ -8,17 +8,18 @@
     body {
       font-family: 'Segoe UI', sans-serif;
       margin: 0;
-      padding: 0;
+      padding: 20px;
       background-color: #1e1e2f;
       color: #f0f0f0;
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 20px;
     }
 
     h1 {
       margin-bottom: 10px;
+      font-size: 2em;
+      text-align: center;
     }
 
     .container {
@@ -41,12 +42,13 @@
       border: none;
       border-radius: 6px;
       font-size: 1em;
+      width: 100%;
+      box-sizing: border-box;
     }
 
     textarea {
       resize: vertical;
       min-height: 80px;
-      width: 100%;
     }
 
     .input-row {
@@ -100,17 +102,48 @@
       border: none;
       border-radius: 8px;
       cursor: pointer;
-      margin-bottom: 15px;
+      margin-top: 10px;
     }
 
     .back-button:hover {
       background-color: #555;
     }
+
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 1.5em;
+      }
+
+      .container {
+        padding: 15px;
+      }
+
+      .input-row {
+        flex-direction: column;
+        gap: 5px;
+      }
+
+      .actions {
+        flex-direction: column;
+      }
+
+      .actions button,
+      .back-button {
+        width: 100%;
+      }
+
+      button {
+        font-size: 1em;
+      }
+
+      pre {
+        font-size: 0.9em;
+      }
+    }
   </style>
 </head>
 <body>
   <div class="container">
-
     <h1>🎮 Steam Скидки</h1>
 
     <div class="top-input">
