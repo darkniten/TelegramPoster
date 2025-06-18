@@ -8,18 +8,18 @@
     body {
       font-family: 'Segoe UI', sans-serif;
       margin: 0;
-      padding: 0;
+      padding: 20px;
       background-color: #1e1e2f;
       color: #f0f0f0;
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 20px;
     }
 
     h1 {
       font-size: 2em;
       margin-bottom: 10px;
+      text-align: center;
     }
 
     p.description {
@@ -60,6 +60,34 @@
     .tool-card p {
       font-size: 0.9em;
       color: #aaa;
+    }
+
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 1.6em;
+      }
+
+      p.description {
+        font-size: 0.95em;
+        padding: 0 10px;
+      }
+
+      .grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+      }
+
+      .tool-card {
+        padding: 15px;
+      }
+
+      .tool-card h3 {
+        font-size: 1em;
+      }
+
+      .tool-card p {
+        font-size: 0.85em;
+      }
     }
   </style>
 </head>
