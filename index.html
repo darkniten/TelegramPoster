@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Мультитул для постов Telegram</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #1e1e2f;
+      color: #f0f0f0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
+
+    h1 {
+      font-size: 2em;
+      margin-bottom: 10px;
+    }
+
+    p.description {
+      max-width: 700px;
+      text-align: center;
+      margin-bottom: 30px;
+      color: #ccc;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 20px;
+      width: 100%;
+      max-width: 900px;
+    }
+
+    .tool-card {
+      background-color: #2c2c3c;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.3);
+      transition: transform 0.2s, background-color 0.2s;
+      cursor: pointer;
+      text-align: center;
+    }
+
+    .tool-card:hover {
+      background-color: #3a3a4a;
+      transform: translateY(-3px);
+    }
+
+    .tool-card h3 {
+      margin: 0 0 10px;
+      font-size: 1.2em;
+    }
+
+    .tool-card p {
+      font-size: 0.9em;
+      color: #aaa;
+    }
+  </style>
+</head>
+<body>
+  <h1>🧰 Мультитул для постов Telegram</h1>
+  <p class="description">
+    Этот сайт поможет тебе быстро и удобно создавать посты в нужном формате для Telegram. Выбери нужный шаблон — и вперед!
+  </p>
+
+  <div class="grid">
+    <div class="tool-card" onclick="window.location.href='steam_post.html'">
+      <h3>🎮 Steam Скидки</h3>
+      <p>Создание постов о скидках на игры со всеми валютами и форматированием</p>
+    </div>
+
+    <div class="tool-card" onclick="window.location.href='minecraft_mods.html'">
+      <h3>🧱 Моды Minecraft (Java)</h3>
+      <p>Генератор постов с модами для Java Edition</p>
+    </div>
+
+    <div class="tool-card" onclick="window.location.href='minecraft_texture.html'">
+      <h3>🍃 Текстур паки Minecraft (Java)</h3>
+      <p>Создание постов о ресурспаках для Minecraft</p>
+    </div>
+
+    <div class="tool-card" onclick="window.location.href='minecraft_bedrock_mod.html'">
+      <h3>🛡️ Моды Minecraft (Bedrock)</h3>
+      <p>Посты о модах для Bedrock Edition</p>
+    </div>
+  </div>
+</body>
+</html>
