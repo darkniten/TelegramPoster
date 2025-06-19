@@ -154,10 +154,7 @@ ${desc}
     }
     function clearFields() {
       const fields = [
-        'title', 'description', 'discount',
-        'rubBefore', 'rubAfter', 'uahBefore', 'uahAfter',
-        'eurBefore', 'eurAfter', 'kztBefore', 'kztAfter',
-        'date'
+        'modName', 'modDesc', 'modVersion'
       ];
       fields.forEach(id => document.getElementById(id).value = '');
       document.getElementById('output').innerText = '';
