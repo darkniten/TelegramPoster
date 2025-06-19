@@ -119,7 +119,10 @@
     <label>Версия:</label>
     <input type="text" id="modVersion" placeholder="Версия">
 
-    <button onclick="generatePost()">Создать пост</button>
+    <div class="button-row">
+      <button onclick="generateModPost()">Создать пост</button>
+      <button onclick="clearFields()">Очистить</button>
+    </div>
     <pre id="output"></pre>
     <button onclick="copyToClipboard()">Скопировать</button>
     <button class="back-button" onclick="goBackToMain()">🔙 Вернуться в меню</button>
@@ -148,6 +151,14 @@ ${desc}
 📌 **@darknitennews | 💬 Чат | #мод**`;
 
       document.getElementById('output').innerText = post;
+    }
+
+    function clearFields() {
+      const fields = [
+        'modName', 'modDesc', 'modVersion'
+      ];
+      fields.forEach(id => document.getElementById(id).value = '');
+      document.getElementById('output').innerText = '';
     }
 
     function copyToClipboard() {
