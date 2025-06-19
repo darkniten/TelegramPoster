@@ -1,18 +1,81 @@
 <!DOCTYPE html>
 <html lang="uk">
 <head>
-  <meta charset="UTF-8">
-  <title>AI Генератор постів</title>
+  <meta charset="UTF-8" />
+  <title>🤖 AI Генератор постів</title>
+  <style>
+    body {
+      background: #1e1e2f;
+      color: #fff;
+      font-family: 'Segoe UI', sans-serif;
+      padding: 2rem;
+      max-width: 800px;
+      margin: auto;
+    }
+
+    textarea, button {
+      width: 100%;
+      font-size: 1rem;
+      padding: 1rem;
+      border-radius: 8px;
+      border: none;
+      margin-top: 1rem;
+      box-sizing: border-box;
+      background-color: #2c2c3c;
+      color: #fff;
+      resize: vertical;
+    }
+
+    button {
+      background-color: #4caf50;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    pre {
+      background: #151522;
+      padding: 1rem;
+      border-radius: 8px;
+      white-space: pre-wrap;
+      margin-top: 1.5rem;
+      min-height: 120px;
+    }
+
+    #buttons {
+      display: none;
+      gap: 10px;
+      margin-top: 1rem;
+    }
+
+    #buttons button {
+      flex: 1;
+    }
+
+    h1 {
+      text-align: center;
+    }
+  </style>
   <script type="module">
     import { GoogleGenerativeAI } from "https://esm.run/@google/generative-ai";
 
-    const API_KEY = "AIzaSyCfQ2E06JEstc8DzA2yFFjYLCnU5eoExW4"; // ВСТАВ СВІЙ API-КЛЮЧ
+    const API_KEY = "AIzaSyCfQ2E06JEstc8DzA2yFFjYLCnU5eoExW4"; // Встав свій ключ сюди
 
     const genAI = new GoogleGenerativeAI(API_KEY);
     let model;
 
     async function setup() {
-      model = await genAI.getGenerativeModel({ model: "models/gemini-pro" });
+      try {
+        const models = await genAI.listModels();
+        console.log("Доступні моделі:", models);
+
+        model = await genAI.getGenerativeModel({ model: "models/text-bison-001" });
+      } catch(e) {
+        console.error("Помилка налаштування:", e);
+        document.getElementById("output").textContent = "⚠️ Помилка ініціалізації: " + e.message;
+      }
     }
 
     async function generatePost() {
@@ -39,7 +102,7 @@
         buttons.style.display = "flex";
       } catch (error) {
         console.error("[❌ ПОМИЛКА Gemini]:", error);
-        output.textContent = "⚠️ Помилка генерації. Перевір ключ або API.";
+        output.textContent = "⚠️ Помилка генерації. Перевір ключ або API.\n" + error.message;
       }
     }
 
@@ -51,65 +114,6 @@
     window.generatePost = generatePost;
     setup();
   </script>
-
-  <style>
-    body {
-      background: #1e1e2f;
-      color: #fff;
-      font-family: 'Segoe UI', sans-serif;
-      padding: 2rem;
-      max-width: 800px;
-      margin: auto;
-    }
-
-    textarea, button {
-      width: 100%;
-      font-size: 1rem;
-      padding: 1rem;
-      border-radius: 8px;
-      border: none;
-      margin-top: 1rem;
-      box-sizing: border-box;
-    }
-
-    textarea {
-      resize: vertical;
-      background-color: #2c2c3c;
-      color: #fff;
-    }
-
-    button {
-      background-color: #4caf50;
-      color: #fff;
-      cursor: pointer;
-    }
-
-    button:hover {
-      background-color: #45a049;
-    }
-
-    pre {
-      background: #151522;
-      padding: 1rem;
-      border-radius: 8px;
-      white-space: pre-wrap;
-      margin-top: 1.5rem;
-    }
-
-    #buttons {
-      display: none;
-      gap: 10px;
-      margin-top: 1rem;
-    }
-
-    #buttons button {
-      flex: 1;
-    }
-
-    h1 {
-      text-align: center;
-    }
-  </style>
 </head>
 <body>
   <h1>🤖 AI Генератор постів</h1>
