@@ -12,7 +12,6 @@
       max-width: 800px;
       margin: auto;
     }
-
     textarea, button {
       width: 100%;
       font-size: 1rem;
@@ -25,16 +24,13 @@
       color: #fff;
       resize: vertical;
     }
-
     button {
       background-color: #4caf50;
       cursor: pointer;
     }
-
     button:hover {
       background-color: #45a049;
     }
-
     pre {
       background: #151522;
       padding: 1rem;
@@ -43,17 +39,14 @@
       margin-top: 1.5rem;
       min-height: 120px;
     }
-
     #buttons {
       display: none;
       gap: 10px;
       margin-top: 1rem;
     }
-
     #buttons button {
       flex: 1;
     }
-
     h1 {
       text-align: center;
     }
@@ -61,22 +54,9 @@
   <script type="module">
     import { GoogleGenerativeAI } from "https://esm.run/@google/generative-ai";
 
-    const API_KEY = "AIzaSyCfQ2E06JEstc8DzA2yFFjYLCnU5eoExW4"; // Встав свій ключ сюди
+    const API_KEY = "AIzaSyCfQ2E06JEstc8DzA2yFFjYLCnU5eoExW4"; // Замінити
 
     const genAI = new GoogleGenerativeAI(API_KEY);
-    let model;
-
-    async function setup() {
-      try {
-        const models = await genAI.listModels();
-        console.log("Доступні моделі:", models);
-
-        model = await genAI.getGenerativeModel({ model: "models/text-bison-001" });
-      } catch(e) {
-        console.error("Помилка налаштування:", e);
-        document.getElementById("output").textContent = "⚠️ Помилка ініціалізації: " + e.message;
-      }
-    }
 
     async function generatePost() {
       const promptInput = document.getElementById("prompt").value.trim();
@@ -92,12 +72,18 @@
       buttons.style.display = "none";
 
       try {
-        const result = await model.generateContent([
-          { text: `Створи креативний пост для Telegram українською з емодзі і заголовком. Інформація:\n${promptInput}` }
-        ]);
-        const response = await result.response;
-        const text = await response.text();
+        // Використовуємо generateText замість generateContent
+        const response = await genAI.generateText({
+          model: "models/text-bison-001", // актуальна модель
+          prompt: [
+            { text: `Створи креативний пост для Telegram українською з емодзі і заголовком. Інформація:\n${promptInput}` }
+          ],
+          temperature: 0.7,
+          candidateCount: 1,
+          maxOutputTokens: 512
+        });
 
+        const text = response.candidates[0].output;
         output.textContent = text.trim();
         buttons.style.display = "flex";
       } catch (error) {
@@ -112,7 +98,6 @@
     }
 
     window.generatePost = generatePost;
-    setup();
   </script>
 </head>
 <body>
