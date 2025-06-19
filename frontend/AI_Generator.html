@@ -9,10 +9,12 @@
     const API_KEY = "AIzaSyCfQ2E06JEstc8DzA2yFFjYLCnU5eoExW4"; // 🔁 ВСТАВ СВІЙ КЛЮЧ ТУТ
 
     const genAI = new GoogleGenerativeAI(API_KEY);
-    let model;
 
+    let model;
     async function setup() {
-      model = await genAI.getGenerativeModel({ model: "gemini-pro" });
+      model = await genAI.getGenerativeModel({
+        model: "models/gemini-pro" // ✅ правильна назва + версія
+      });
     }
 
     async function generatePost() {
@@ -21,7 +23,7 @@
       const buttons = document.getElementById("buttons");
 
       if (!promptInput) {
-        alert("Введіть інформацію для посту!");
+        alert("Введіть інформацію для поста!");
         return;
       }
 
@@ -30,17 +32,17 @@
 
       try {
         const result = await model.generateContent(
-          `Згенеруй українською Telegram-пост із емодзі, заголовком та закликом до дії. Ось суть:\n${promptInput}`
+          `Згенеруй українською Telegram-пост із емодзі, заголовком і закликом до дії. Ось основа:\n${promptInput}`
         );
 
         const response = await result.response;
-        const text = response.text();
+        const text = await response.text();
 
         output.textContent = text.trim();
         buttons.style.display = "flex";
       } catch (e) {
         console.error("❌ Помилка:", e);
-        output.textContent = "⚠️ Помилка генерації поста. Спробуйте пізніше.";
+        output.textContent = "⚠️ Помилка генерації. Перевір ключ і API.";
       }
     }
 
@@ -50,7 +52,6 @@
     }
 
     window.generatePost = generatePost;
-
     setup();
   </script>
   <style>
@@ -114,7 +115,7 @@
 </head>
 <body>
   <h1>🤖 AI Генератор постів</h1>
-  <textarea id="prompt" placeholder="Наприклад: Скидки до -60% у Розетці до 20.06.2025..."></textarea>
+  <textarea id="prompt" placeholder="Наприклад: Знижки до -60% у Розетці до 20.06.2025..."></textarea>
   <button onclick="generatePost()">🎯 Створити пост</button>
   <pre id="output">...</pre>
   <div id="buttons">
