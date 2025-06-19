@@ -14,7 +14,6 @@
       align-items: center;
       padding: 20px;
     }
-
     .container {
       max-width: 800px;
       width: 100%;
@@ -23,33 +22,22 @@
       padding: 20px;
       box-shadow: 0 0 10px rgba(0,0,0,0.5);
     }
-
-    h1 {
-      font-size: 2em;
-      text-align: center;
-      margin-bottom: 15px;
-    }
-
     label {
       display: block;
       margin-top: 15px;
       font-weight: bold;
     }
-
     input, textarea {
       width: 100%;
       padding: 10px;
       border: none;
       border-radius: 6px;
       font-size: 1em;
-      box-sizing: border-box;
     }
-
     textarea {
       resize: vertical;
       min-height: 100px;
     }
-
     button {
       margin-top: 20px;
       padding: 10px 20px;
@@ -60,11 +48,9 @@
       border-radius: 6px;
       cursor: pointer;
     }
-
     button:hover {
       background-color: #45a049;
     }
-
     pre {
       background-color: #151522;
       padding: 15px;
@@ -72,45 +58,19 @@
       white-space: pre-wrap;
       font-family: monospace;
       margin-top: 20px;
-      font-size: 0.95em;
     }
-
     .back-button {
       background-color: #3c3c5c;
       margin-top: 30px;
-      width: fit-content;
     }
-
     .back-button:hover {
       background-color: #505073;
-    }
-
-    @media (max-width: 600px) {
-      h1 {
-        font-size: 1.6em;
-        text-align: center;
-      }
-
-      input, textarea {
-        font-size: 1em;
-      }
-
-      button,
-      .back-button {
-        width: 100%;
-        font-size: 1em;
-      }
-
-      pre {
-        font-size: 0.9em;
-      }
     }
   </style>
 </head>
 <body>
   <div class="container">
     <h1>🍃 Пост: Minecraft Texture Pack</h1>
-
     <label>Название ресурспака:</label>
     <input type="text" id="packName" placeholder="Название ресурспака">
 
@@ -120,7 +80,11 @@
     <label>Версии:</label>
     <input type="text" id="packVersion" placeholder="Версии">
 
-    <button onclick="generateTexturePost()">Создать пост</button>
+    <div class="button-row">
+      <button onclick="generateModPost()">Создать пост</button>
+      <button onclick="clearFields()">Очистить</button>
+    </div>
+
     <pre id="output"></pre>
     <button onclick="copyToClipboard()">Скопировать</button>
     <button class="back-button" onclick="goBackToMain()">🔙 Вернуться в меню</button>
@@ -151,6 +115,14 @@ ${desc}
 📌 **@darknitennews | 💬 Чат | #текстуры**`;
 
       document.getElementById('output').innerText = post;
+    }
+
+    function clearFields() {
+      const fields = [
+        'packName', 'packDesc', 'packVersion'
+      ];
+      fields.forEach(id => document.getElementById(id).value = '');
+      document.getElementById('output').innerText = '';
     }
 
     function copyToClipboard() {
