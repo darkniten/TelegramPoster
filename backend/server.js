@@ -5,7 +5,7 @@ import cors from "cors";
 const app = express();
 
 // 👇 ВСТАВ СЮДИ СВІЙ АКТУАЛЬНИЙ API-КЛЮЧ
-const API_KEY = "AIzaSyCfQ2E06JEstc8DzA2yFFjYLCnU5eoExW4";
+const API_KEY = "AIzaSyD14qPJo1sAKxKh47gfVzyQxYEZztbqxMw";
 
 app.use(cors());
 app.use(express.json());
