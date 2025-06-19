@@ -122,6 +122,7 @@
     <button onclick="generateModPost()">Создать пост</button>
     <pre id="output"></pre>
     <button onclick="copyToClipboard()">Скопировать</button>
+    <button onclick="clearFields()">Очистить</button>
     <button class="back-button" onclick="goBackToMain()">🔙 Вернуться в меню</button>
   </div>
 
@@ -150,6 +151,16 @@ ${desc}
 📌 **@darknitennews | 💬 Чат | #мод**`;
 
       document.getElementById('output').innerText = post;
+    }
+    function clearFields() {
+      const fields = [
+        'title', 'description', 'discount',
+        'rubBefore', 'rubAfter', 'uahBefore', 'uahAfter',
+        'eurBefore', 'eurAfter', 'kztBefore', 'kztAfter',
+        'date'
+      ];
+      fields.forEach(id => document.getElementById(id).value = '');
+      document.getElementById('output').innerText = '';
     }
 
     function copyToClipboard() {
