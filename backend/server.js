@@ -3,7 +3,7 @@ import fetch from "node-fetch";
 import cors from "cors";
 
 const app = express();
-const API_KEY = "AIzaSyDy4gnBxXChk6g862g8v90__ggKWSMyMc4";
+const API_KEY = "AIzaSyCfQ2E06JEstc8DzA2yFFjYLCnU5eoExW4";
 
 app.use(cors());
 app.use(express.json());
