@@ -1,75 +1,102 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>🎮 Steam Скидки</title>
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
       margin: 0;
       padding: 20px;
-      background-color: #1e1e2f;
+      background: linear-gradient(135deg, #1e1e2f, #2c2c3c);
       color: #f0f0f0;
       display: flex;
-      flex-direction: column;
-      align-items: center;
+      justify-content: center;
+      overflow-x: hidden;
     }
-
-    h1 {
-      margin-bottom: 10px;
-      font-size: 2em;
-      text-align: center;
-    }
-
     .container {
       max-width: 800px;
       width: 100%;
-      background-color: #2c2c3c;
+      background-color: rgba(44, 44, 60, 0.95);
       border-radius: 12px;
       padding: 20px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.5);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
     }
-
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .toggle-row {
+      display: flex;
+      gap: 10px;
+      margin: 20px 0;
+      flex-wrap: wrap;
+    }
+    .toggle-button {
+      flex: 1;
+      padding: 10px;
+      text-align: center;
+      border-radius: 8px;
+      cursor: pointer;
+      background-color: #8b2b2b;
+      font-weight: bold;
+      transition: 0.3s;
+      min-width: 200px;
+      user-select: none;
+    }
+    .toggle-button.active {
+      background-color: #2e8b57;
+    }
     label {
       display: block;
       margin-top: 15px;
       font-weight: bold;
     }
-
     input, textarea {
       padding: 10px;
-      border: none;
+      border: 1px solid #3a3a50;
       border-radius: 6px;
       font-size: 1em;
       width: 100%;
       box-sizing: border-box;
+      margin-top: 5px;
+      transition: all 0.3s ease;
+      color: #000;
+      background-color: #fff;
     }
-
+    input:focus, textarea:focus {
+      outline: none;
+      box-shadow: 0 0 0 2px #4caf50;
+      background-color: #34344a;
+      color: #fff;
+    }
     textarea {
       resize: vertical;
       min-height: 80px;
     }
-
     .input-row {
       display: flex;
       align-items: center;
       gap: 10px;
       margin-top: 10px;
+      flex-wrap: wrap;
+      padding: 5px 10px;
+      background-color: rgba(255,255,255,0.02);
+      border-radius: 6px;
     }
-
-    .input-row input[type="text"] {
-      flex: 2;
+    .input-row input[type="text"],
+    .input-row input[type="number"] {
+      flex: 1;
+      min-width: 120px;
     }
-
-    .input-row input[type="number"], .input-row input.extraDiscount {
-      width: 70px;
+    .input-row span {
+      white-space: nowrap;
     }
-
-    .input-row input[type="checkbox"] {
-      width: auto;
+    .disabled-input {
+      background-color: #555 !important;
+      color: #aaa !important;
     }
-
     button {
       margin-top: 15px;
       padding: 10px 20px;
@@ -79,12 +106,20 @@
       font-size: 1em;
       border-radius: 6px;
       cursor: pointer;
+      transition: all 0.3s ease;
+      user-select: none;
     }
-
+    .action-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+      justify-content: center;
+    }
     button:hover {
-      background-color: #45a049;
+      transform: scale(1.03);
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
     }
-
     pre {
       background-color: #151522;
       padding: 15px;
@@ -92,61 +127,60 @@
       white-space: pre-wrap;
       font-family: monospace;
       margin-top: 20px;
+      max-height: 350px;
+      overflow-y: auto;
     }
-
-    .actions {
+    .extraGameBlock {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      margin-top: 15px;
+    }
+    .extraGameInner {
       display: flex;
       gap: 10px;
     }
-
-    .top-input {
-      margin-bottom: 25px;
-    }
-
-    .back-button {
-      background-color: #444;
-      color: #fff;
-      padding: 8px 16px;
-      border: none;
+    .extraToggleButton {
+      text-align: center;
       border-radius: 8px;
+      padding: 8px;
       cursor: pointer;
+      font-weight: bold;
+      background-color: #8b2b2b;
+      transition: 0.3s;
+      margin-top: 5px;
+      user-select: none;
+    }
+    .extraToggleButton.active {
+      background-color: #2e8b57;
+    }
+    #regionButtons {
+      display: none;
       margin-top: 10px;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
     }
-
-    .back-button:hover {
-      background-color: #555;
+    .region-button {
+      min-width: 90px;
+      padding: 8px;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      user-select: none;
+      background-color: #8b2b2b;
+      color: white;
+      transition: 0.3s;
+      text-align: center;
     }
-
-    @media (max-width: 600px) {
-      h1 {
-        font-size: 1.5em;
-      }
-
-      .container {
-        padding: 15px;
-      }
-
-      .input-row {
-        flex-direction: column;
-        gap: 5px;
-      }
-
-      .actions {
-        flex-direction: column;
-      }
-
-      .actions button,
-      .back-button {
-        width: 100%;
-      }
-
-      button {
-        font-size: 1em;
-      }
-
-      pre {
-        font-size: 0.9em;
-      }
+    .region-button.active {
+      background-color: #2e8b57;
+    }
+    footer {
+      text-align: center;
+      margin-top: 30px;
+      font-size: 0.9em;
+      opacity: 0.6;
     }
   </style>
 </head>
@@ -154,153 +188,237 @@
   <div class="container">
     <h1>🎮 Steam Скидки</h1>
 
-    <div class="top-input">
-      <label>Введите год акции:</label>
-      <input type="number" id="yearInput" placeholder="гггг">
-    </div>
+    <label>📅 Год акции:</label>
+    <input type="number" id="yearInput" placeholder="Год (гггг)" />
 
-    <label>Название игры:</label>
-    <input type="text" id="title" placeholder="Название игры">
+    <label>🕹️ Название игры:</label>
+    <input type="text" id="title" placeholder="Название игры" />
 
-    <label>Описание игры:</label>
+    <label>📝 Описание игры:</label>
     <textarea id="description" placeholder="Описание игры"></textarea>
 
-    <label>Процент скидки:</label>
-    <input type="number" id="discount" placeholder="...">
+    <label>💥 Процент скидки:</label>
+    <input type="number" id="discount" placeholder="Процент скидки" />
 
-    <label>Цены:</label>
-    <div class="input-row">
-      <input type="text" id="rubBefore" placeholder="до | руб">
-      <span>➡️</span>
-      <input type="text" id="rubAfter" placeholder="после | руб">
-    </div>
-    <div class="input-row">
-      <input type="text" id="uahBefore" placeholder="до | грн">
-      <span>➡️</span>
-      <input type="text" id="uahAfter" placeholder="после | грн">
-    </div>
-    <div class="input-row">
-      <input type="text" id="eurBefore" placeholder="до | евро">
-      <span>➡️</span>
-      <input type="text" id="eurAfter" placeholder="после | евро">
-    </div>
-    <div class="input-row">
-      <input type="text" id="kztBefore" placeholder="до | тенге">
-      <span>➡️</span>
-      <input type="text" id="kztAfter" placeholder="после | тенге">
+    <div class="toggle-row">
+      <div id="btnBiggest" class="toggle-button" onclick="toggleButton('btnBiggest')">📉 Самая большая скидка</div>
+      <div id="btnFree" class="toggle-button" onclick="toggleFreeGame()">🎁 Бесплатная игра</div>
     </div>
 
-    <label>Дата окончания скидки:</label>
-    <input type="text" id="date" placeholder="дд.мм">
-
-    <label>Дополнительные игры по акции:</label>
-    <div id="extraGames">
-      <div class="input-row">
-        <input type="checkbox" class="extraCheck">
-        <input type="text" class="extraTitle" placeholder="Название игры">
-        <input type="text" class="extraDiscount" placeholder="%">
-      </div>
-      <div class="input-row">
-        <input type="checkbox" class="extraCheck">
-        <input type="text" class="extraTitle" placeholder="Название игры">
-        <input type="text" class="extraDiscount" placeholder="%">
-      </div>
-      <div class="input-row">
-        <input type="checkbox" class="extraCheck">
-        <input type="text" class="extraTitle" placeholder="Название игры">
-        <input type="text" class="extraDiscount" placeholder="%">
-      </div>
-      <div class="input-row">
-        <input type="checkbox" class="extraCheck">
-        <input type="text" class="extraTitle" placeholder="Название игры">
-        <input type="text" class="extraDiscount" placeholder="%">
-      </div>
+    <div id="regionButtons">
+      <div class="region-button" id="regionRub" onclick="toggleRegion('regionRub')">₽ РУБ</div>
+      <div class="region-button" id="regionUah" onclick="toggleRegion('regionUah')">₴ ГРН</div>
+      <div class="region-button" id="regionEur" onclick="toggleRegion('regionEur')">€ ЕВРО</div>
+      <div class="region-button" id="regionKzt" onclick="toggleRegion('regionKzt')">₸ ТЕНГЕ</div>
     </div>
 
-    <div class="actions">
+    <label>🛒 Цены:</label>
+    <div class="input-row">
+      <input type="text" id="rubBefore" placeholder="до | руб" />
+      <span>➡️</span>
+      <input type="text" id="rubAfter" placeholder="после | руб" />
+    </div>
+    <div class="input-row">
+      <input type="text" id="uahBefore" placeholder="до | грн" />
+      <span>➡️</span>
+      <input type="text" id="uahAfter" placeholder="после | грн" />
+    </div>
+    <div class="input-row">
+      <input type="text" id="eurBefore" placeholder="до | евро" />
+      <span>➡️</span>
+      <input type="text" id="eurAfter" placeholder="после | евро" />
+    </div>
+    <div class="input-row">
+      <input type="text" id="kztBefore" placeholder="до | тенге" />
+      <span>➡️</span>
+      <input type="text" id="kztAfter" placeholder="после | тенге" />
+    </div>
+
+    <label>📆 Дата окончания скидки:</label>
+    <input type="text" id="date" placeholder="Дата окончания (дд.мм)" />
+
+    <label>🎮 Дополнительные игры по акции:</label>
+    <div id="extraGames"></div>
+
+    <div class="action-buttons">
       <button onclick="generatePost()">Создать пост</button>
+      <button onclick="copyToClipboard()">Скопировать</button>
       <button onclick="clearFields()">Очистить</button>
+      <button onclick="goBackToMain()">🔙 В главное меню</button>
     </div>
 
     <pre id="output"></pre>
-    <button onclick="copyToClipboard()">Скопировать</button>
-    <button class="back-button" onclick="goBackToMain()">🔙 Вернуться в меню</button>
+    <footer>© 2025 Steam Discount Generator</footer>
   </div>
 
   <script>
+    const extraGames = document.getElementById('extraGames');
+    for (let i = 0; i < 4; i++) {
+      const block = document.createElement('div');
+      block.className = 'extraGameBlock';
+
+      const inner = document.createElement('div');
+      inner.className = 'extraGameInner';
+
+      const titleInput = document.createElement('input');
+      titleInput.type = 'text';
+      titleInput.className = 'extraTitle disabled-input';
+      titleInput.placeholder = 'Название игры';
+      titleInput.disabled = true;
+
+      const discountInput = document.createElement('input');
+      discountInput.type = 'text';
+      discountInput.className = 'extraDiscount disabled-input';
+      discountInput.placeholder = '%';
+      discountInput.disabled = true;
+
+      const toggle = document.createElement('div');
+      toggle.className = 'extraToggleButton';
+      toggle.innerText = 'Активировать';
+      toggle.onclick = () => {
+        const isActive = toggle.classList.toggle('active');
+        titleInput.disabled = !isActive;
+        discountInput.disabled = !isActive;
+        titleInput.classList.toggle('disabled-input', !isActive);
+        discountInput.classList.toggle('disabled-input', !isActive);
+      };
+
+      inner.append(titleInput, discountInput);
+      block.append(inner, toggle);
+      extraGames.appendChild(block);
+    }
+
+    // Региональные кнопки состояния для бесплатной игры
+    const regions = {
+      regionRub: true,
+      regionUah: false,
+      regionEur: true,
+      regionKzt: false
+    };
+
+    function toggleButton(id) {
+      const btn = document.getElementById(id);
+      btn.classList.toggle('active');
+    }
+
+    function toggleFreeGame() {
+      toggleButton('btnFree');
+      const active = document.getElementById('btnFree').classList.contains('active');
+      const discount = document.getElementById('discount');
+      discount.disabled = active;
+      discount.style.backgroundColor = active ? '#5e2c2c' : '';
+      const fields = ['rubBefore','rubAfter','uahBefore','uahAfter','eurBefore','eurAfter','kztBefore','kztAfter'];
+      fields.forEach(id => {
+        const el = document.getElementById(id);
+        el.disabled = active;
+        el.style.backgroundColor = active ? '#5e2c2c' : '';
+      });
+
+      const regionButtons = document.getElementById('regionButtons');
+      if(active) {
+        regionButtons.style.display = 'flex';
+      } else {
+        regionButtons.style.display = 'none';
+        // сброс всех регионов в false и обновление кнопок
+        Object.keys(regions).forEach(key => regions[key] = false);
+        updateRegionButtons();
+      }
+    }
+
+    function toggleRegion(id) {
+      regions[id] = !regions[id];
+      updateRegionButtons();
+    }
+
+    function updateRegionButtons() {
+      Object.entries(regions).forEach(([id, active]) => {
+        const btn = document.getElementById(id);
+        if(active) btn.classList.add('active');
+        else btn.classList.remove('active');
+      });
+    }
+
     function generatePost() {
       const year = document.getElementById('yearInput').value;
-      const title = document.getElementById('title').value;
-      const desc = document.getElementById('description').value;
-      const discountValue = document.getElementById('discount').value;
-      const discount = `-${discountValue}%`;
+      const title = document.getElementById('title').value.trim();
+      const desc = document.getElementById('description').value.trim();
+      const discount = document.getElementById('discount').value.trim();
+      const date = document.getElementById('date').value.trim();
+      const isFree = document.getElementById('btnFree').classList.contains('active');
+      const isBiggest = document.getElementById('btnBiggest').classList.contains('active');
 
       const rub = `${document.getElementById('rubBefore').value}₽ ➡️ ${document.getElementById('rubAfter').value}₽`;
       const uah = `${document.getElementById('uahBefore').value}₴ ➡️ ${document.getElementById('uahAfter').value}₴`;
       const eur = `${document.getElementById('eurBefore').value}€ ➡️ ${document.getElementById('eurAfter').value}€`;
       const kzt = `${document.getElementById('kztBefore').value}₸ ➡️ ${document.getElementById('kztAfter').value}₸`;
 
-      const date = document.getElementById('date').value;
+      let priceBlock = '';
+      if(isFree){
+        // Формируем строку с отметками регионов
+        const regionMarks = [];
+        regionMarks.push(regions.regionRub ? '✅₽' : '❌₽');
+        regionMarks.push(regions.regionUah ? '✅₴' : '❌₴');
+        regionMarks.push(regions.regionEur ? '✅€' : '❌€');
+        regionMarks.push(regions.regionKzt ? '✅₸' : '❌₸');
 
-      // Дополнительные игры
-      const checks = document.querySelectorAll('.extraCheck');
-      const titles = document.querySelectorAll('.extraTitle');
-      const discounts = document.querySelectorAll('.extraDiscount');
-      let extraLines = [];
+        priceBlock = `💥 Игра сейчас **БЕСПЛАТНА**\n${regionMarks.join('   ')}`;
+      } else {
+        priceBlock = `💸 **СКИДКА -${discount}%:**\n\`${rub}\`\n\`${uah}\`\n\`${eur}\`\n\`${kzt}\``;
+      }
 
-      for (let i = 0; i < checks.length; i++) {
-        if (checks[i].checked && titles[i].value && discounts[i].value) {
-          extraLines.push(`${titles[i].value} | -${discounts[i].value}%`);
+      let extras = [];
+      document.querySelectorAll('.extraGameBlock').forEach(block => {
+        const t = block.querySelector('.extraTitle').value.trim();
+        const d = block.querySelector('.extraDiscount').value.trim();
+        const isActive = !block.querySelector('.extraTitle').disabled;
+        if (isActive && t && d) {
+          extras.push(`${t} | -${d}%`);
         }
-      }
+      });
 
-      let extrasBlock = '';
-      if (extraLines.length > 0) {
-        extrasBlock = `\n📌 Также по акции доступно:\n${extraLines.join('\n')}`;
-      }
-
-      if (!year || !title || !desc || !discountValue || !rub || !uah || !eur || !kzt || !date) {
-        alert('Пожалуйста, заполните все поля.');
-        return;
-      }
-
-      const post = `🎮 \`${title}\`
-${desc}
-
-💸 **СКИДКА ${discount}:**
-\`${rub}\`
-\`${uah}\`
-\`${eur}\`
-\`${kzt}\`
-
-🕒 Акция до: **${date}.${year}**${extrasBlock}
-
-🔗 Открыть в Steam
-
-⭐️ Канал о скидках: @steam_ed`;
+      let post = `🎮 \`${title}\`\n${desc}\n\n${priceBlock}\n\n🕒 Акция до: **${date}.${year}**`;
+      if (isBiggest) post += '\n\n📉 Самая большая скидка за 2 года!';
+      if (extras.length) post += `\n\n📌 Также по акции:\n${extras.join('\n')}`;
+      post += '\n\n🔗 Открыть в Steam\n\n⭐️ Канал о скидках: @steam_ed';
 
       document.getElementById('output').innerText = post;
     }
 
     function clearFields() {
-      const fields = [
-        'title', 'description', 'discount',
-        'rubBefore', 'rubAfter', 'uahBefore', 'uahAfter',
-        'eurBefore', 'eurAfter', 'kztBefore', 'kztAfter',
-        'date'
-      ];
-      fields.forEach(id => document.getElementById(id).value = '');
+      document.querySelectorAll('input, textarea').forEach(el => {
+        if (!el.classList.contains('extraDiscount') && !el.classList.contains('extraTitle')) {
+          el.value = '';
+          el.disabled = false;
+          el.style.backgroundColor = '';
+        }
+      });
+      document.querySelectorAll('.toggle-button, .extraToggleButton').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.extraTitle, .extraDiscount').forEach(el => {
+        el.value = '';
+        el.disabled = true;
+        el.classList.add('disabled-input');
+      });
+      // Сброс регионов
+      Object.keys(regions).forEach(key => regions[key] = false);
+      updateRegionButtons();
+
       document.getElementById('output').innerText = '';
+      document.getElementById('regionButtons').style.display = 'none';
     }
 
     function copyToClipboard() {
-      const output = document.getElementById('output').innerText;
-      navigator.clipboard.writeText(output).then(() => {
-        alert('Пост скопирован в буфер обмена!');
-      });
+      const text = document.getElementById('output').innerText;
+      if(!text){
+        alert('Сначала сгенерируйте пост!');
+        return;
+      }
+      navigator.clipboard.writeText(text)
+        .then(() => alert('Скопировано в буфер обмена!'))
+        .catch(() => alert('Ошибка копирования'));
     }
 
     function goBackToMain() {
+      // Тут можно настроить переход на нужную страницу
       window.location.href = 'index.html';
     }
   </script>
