@@ -58,8 +58,16 @@
       margin-top: 10px;
     }
 
-    .input-row input {
-      flex: 1;
+    .input-row input[type="text"] {
+      flex: 2;
+    }
+
+    .input-row input[type="number"], .input-row input.extraDiscount {
+      width: 70px;
+    }
+
+    .input-row input[type="checkbox"] {
+      width: auto;
     }
 
     button {
@@ -185,6 +193,30 @@
     <label>Дата окончания скидки:</label>
     <input type="text" id="date" placeholder="дд.мм">
 
+    <label>Дополнительные игры по акции:</label>
+    <div id="extraGames">
+      <div class="input-row">
+        <input type="checkbox" class="extraCheck">
+        <input type="text" class="extraTitle" placeholder="Название игры">
+        <input type="text" class="extraDiscount" placeholder="%">
+      </div>
+      <div class="input-row">
+        <input type="checkbox" class="extraCheck">
+        <input type="text" class="extraTitle" placeholder="Название игры">
+        <input type="text" class="extraDiscount" placeholder="%">
+      </div>
+      <div class="input-row">
+        <input type="checkbox" class="extraCheck">
+        <input type="text" class="extraTitle" placeholder="Название игры">
+        <input type="text" class="extraDiscount" placeholder="%">
+      </div>
+      <div class="input-row">
+        <input type="checkbox" class="extraCheck">
+        <input type="text" class="extraTitle" placeholder="Название игры">
+        <input type="text" class="extraDiscount" placeholder="%">
+      </div>
+    </div>
+
     <div class="actions">
       <button onclick="generatePost()">Создать пост</button>
       <button onclick="clearFields()">Очистить</button>
@@ -210,6 +242,23 @@
 
       const date = document.getElementById('date').value;
 
+      // Дополнительные игры
+      const checks = document.querySelectorAll('.extraCheck');
+      const titles = document.querySelectorAll('.extraTitle');
+      const discounts = document.querySelectorAll('.extraDiscount');
+      let extraLines = [];
+
+      for (let i = 0; i < checks.length; i++) {
+        if (checks[i].checked && titles[i].value && discounts[i].value) {
+          extraLines.push(`${titles[i].value} | -${discounts[i].value}%`);
+        }
+      }
+
+      let extrasBlock = '';
+      if (extraLines.length > 0) {
+        extrasBlock = `\n📌 Также по акции доступно:\n${extraLines.join('\n')}`;
+      }
+
       if (!year || !title || !desc || !discountValue || !rub || !uah || !eur || !kzt || !date) {
         alert('Пожалуйста, заполните все поля.');
         return;
@@ -224,7 +273,7 @@ ${desc}
 \`${eur}\`
 \`${kzt}\`
 
-🕒 Акция до: **${date}.${year}**
+🕒 Акция до: **${date}.${year}**${extrasBlock}
 
 🔗 Открыть в Steam
 
