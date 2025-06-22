@@ -78,20 +78,70 @@
     .input-row {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 6px;
       margin-top: 10px;
-      flex-wrap: wrap;
+      flex-wrap: nowrap;
       padding: 5px 10px;
       background-color: rgba(255,255,255,0.02);
       border-radius: 6px;
+      width: 100%;
+      box-sizing: border-box;
     }
     .input-row input[type="text"],
     .input-row input[type="number"] {
-      flex: 1;
-      min-width: 120px;
+      padding: 8px;
+      font-size: 1em;
+      border-radius: 6px;
+      border: 1px solid #3a3a50;
+      color: #000;
+      background-color: #fff;
+      flex-shrink: 0;
+      box-sizing: border-box;
+      transition: all 0.3s ease;
     }
     .input-row span {
       white-space: nowrap;
+      flex-shrink: 0;
+      font-size: 1.2em;
+    }
+    /* Для цен: растянуть по ширине, с пропорциями */
+    #rubRow input#rubBefore,
+    #rubRow input#rubAfter,
+    #uahRow input#uahBefore,
+    #uahRow input#uahAfter,
+    #eurRow input#eurBefore,
+    #eurRow input#eurAfter,
+    #kztRow input#kztBefore,
+    #kztRow input#kztAfter {
+      width: 40%;
+      /* Чтобы цвет менялся, добавим transition */
+      transition: background-color 0.3s, color 0.3s;
+    }
+    /* Кнопки "н.п." фиксированной ширины */
+    .np-button {
+      width: 50px;
+      height: 32px;
+      border-radius: 6px;
+      cursor: pointer;
+      user-select: none;
+      font-weight: bold;
+      text-align: center;
+      line-height: 32px;
+      background-color: #8b2b2b;
+      color: white;
+      transition: background-color 0.3s ease;
+      flex-shrink: 0;
+    }
+    .np-button.active {
+      background-color: #2e8b57;
+    }
+    /* Процент скидки - шире */
+    #discount {
+      width: 200%;
+      max-width: 200px;
+    }
+    .relative-wrapper.discount-wrapper {
+      max-width: 120px;
     }
     .disabled-input {
       background-color: #555 !important;
@@ -176,6 +226,35 @@
     .region-button.active {
       background-color: #2e8b57;
     }
+    #yearOptions, #discountOptions {
+      background-color: #2c2c3c;
+      border: 1px solid #4caf50;
+      border-radius: 6px;
+      margin-top: 3px;
+      padding: 5px 10px;
+      display: none;
+      user-select: none;
+      position: absolute;
+      color: #f0f0f0;
+      font-weight: bold;
+      z-index: 100;
+    }
+    #yearOptions div, #discountOptions div {
+      padding: 6px 8px;
+      cursor: pointer;
+      border-radius: 4px;
+      margin-bottom: 3px;
+    }
+    #yearOptions div:hover, #discountOptions div:hover {
+      background-color: #4caf50;
+      color: #000;
+    }
+    .relative-wrapper {
+      position: relative;
+      width: 100%;
+      max-width: 150px;
+      display: inline-block;
+    }
     footer {
       text-align: center;
       margin-top: 30px;
@@ -189,7 +268,14 @@
     <h1>🎮 Steam Скидки</h1>
 
     <label>📅 Год акции:</label>
-    <input type="number" id="yearInput" placeholder="Год (гггг)" />
+    <div class="relative-wrapper">
+      <input type="number" id="yearInput" placeholder="Год (гггг)" autocomplete="off" />
+      <div id="yearOptions">
+        <div data-year="2025">2025</div>
+        <div data-year="2026">2026</div>
+        <div data-year="2027">2027</div>
+      </div>
+    </div>
 
     <label>🕹️ Название игры:</label>
     <input type="text" id="title" placeholder="Название игры" />
@@ -198,7 +284,18 @@
     <textarea id="description" placeholder="Описание игры"></textarea>
 
     <label>💥 Процент скидки:</label>
-    <input type="number" id="discount" placeholder="Процент скидки" />
+    <div class="relative-wrapper discount-wrapper">
+      <input type="number" id="discount" placeholder="Процент скидки" autocomplete="off" />
+      <div id="discountOptions">
+        <div data-discount="65">65%</div>
+        <div data-discount="70">70%</div>
+        <div data-discount="75">75%</div>
+        <div data-discount="80">80%</div>
+        <div data-discount="85">85%</div>
+        <div data-discount="90">90%</div>
+        <div data-discount="95">95%</div>
+      </div>
+    </div>
 
     <div class="toggle-row">
       <div id="btnBiggest" class="toggle-button" onclick="toggleButton('btnBiggest')">📉 Самая большая скидка</div>
@@ -213,25 +310,37 @@
     </div>
 
     <label>🛒 Цены:</label>
-    <div class="input-row">
+
+    <div class="input-row" id="rubRow">
       <input type="text" id="rubBefore" placeholder="до | руб" />
+      <div class="np-button" id="npRubBefore" onclick="toggleNp('npRubBefore', 'rubBefore')">н.п.</div>
       <span>➡️</span>
       <input type="text" id="rubAfter" placeholder="после | руб" />
+      <div class="np-button" id="npRubAfter" onclick="toggleNp('npRubAfter', 'rubAfter')">н.п.</div>
     </div>
-    <div class="input-row">
+
+    <div class="input-row" id="uahRow">
       <input type="text" id="uahBefore" placeholder="до | грн" />
+      <div class="np-button" id="npUahBefore" onclick="toggleNp('npUahBefore', 'uahBefore')">н.п.</div>
       <span>➡️</span>
       <input type="text" id="uahAfter" placeholder="после | грн" />
+      <div class="np-button" id="npUahAfter" onclick="toggleNp('npUahAfter', 'uahAfter')">н.п.</div>
     </div>
-    <div class="input-row">
+
+    <div class="input-row" id="eurRow">
       <input type="text" id="eurBefore" placeholder="до | евро" />
+      <div class="np-button" id="npEurBefore" onclick="toggleNp('npEurBefore', 'eurBefore')">н.п.</div>
       <span>➡️</span>
       <input type="text" id="eurAfter" placeholder="после | евро" />
+      <div class="np-button" id="npEurAfter" onclick="toggleNp('npEurAfter', 'eurAfter')">н.п.</div>
     </div>
-    <div class="input-row">
+
+    <div class="input-row" id="kztRow">
       <input type="text" id="kztBefore" placeholder="до | тенге" />
+      <div class="np-button" id="npKztBefore" onclick="toggleNp('npKztBefore', 'kztBefore')">н.п.</div>
       <span>➡️</span>
       <input type="text" id="kztAfter" placeholder="после | тенге" />
+      <div class="np-button" id="npKztAfter" onclick="toggleNp('npKztAfter', 'kztAfter')">н.п.</div>
     </div>
 
     <label>📆 Дата окончания скидки:</label>
@@ -288,7 +397,6 @@
       extraGames.appendChild(block);
     }
 
-    // Региональные кнопки состояния для бесплатной игры
     const regions = {
       regionRub: true,
       regionUah: false,
@@ -312,6 +420,7 @@
         const el = document.getElementById(id);
         el.disabled = active;
         el.style.backgroundColor = active ? '#5e2c2c' : '';
+        el.style.color = active ? '#ccc' : '#000'; // меняем цвет текста тоже
       });
 
       const regionButtons = document.getElementById('regionButtons');
@@ -319,7 +428,6 @@
         regionButtons.style.display = 'flex';
       } else {
         regionButtons.style.display = 'none';
-        // сброс всех регионов в false и обновление кнопок
         Object.keys(regions).forEach(key => regions[key] = false);
         updateRegionButtons();
       }
@@ -338,6 +446,78 @@
       });
     }
 
+    const yearInput = document.getElementById('yearInput');
+    const yearOptions = document.getElementById('yearOptions');
+    yearInput.addEventListener('focus', () => {
+      yearOptions.style.display = 'block';
+    });
+    yearInput.addEventListener('blur', () => {
+      setTimeout(() => {
+        yearOptions.style.display = 'none';
+      }, 150);
+    });
+    yearOptions.querySelectorAll('div').forEach(div => {
+      div.addEventListener('mousedown', (e) => {
+        e.preventDefault();
+        yearInput.value = div.dataset.year;
+        yearOptions.style.display = 'none';
+      });
+    });
+
+    const discountInput = document.getElementById('discount');
+    const discountOptions = document.getElementById('discountOptions');
+    discountInput.addEventListener('focus', () => {
+      discountOptions.style.display = 'block';
+    });
+    discountInput.addEventListener('blur', () => {
+      setTimeout(() => {
+        discountOptions.style.display = 'none';
+      }, 150);
+    });
+    discountOptions.querySelectorAll('div').forEach(div => {
+      div.addEventListener('mousedown', (e) => {
+        e.preventDefault();
+        discountInput.value = div.dataset.discount;
+        discountOptions.style.display = 'none';
+      });
+    });
+
+    // Функция переключения кнопки н.п. и отключения input
+    function toggleNp(btnId, inputId) {
+      const btn = document.getElementById(btnId);
+      const input = document.getElementById(inputId);
+
+      btn.classList.toggle('active');
+      const isActive = btn.classList.contains('active');
+      input.disabled = isActive;
+
+      updateInputColor(input, isActive);
+    }
+
+    // Обновляет цвет input в зависимости от disabled или активности кнопки "н.п."
+    function updateInputColor(input, isDisabled) {
+      if (isDisabled) {
+        input.classList.add('disabled-input');
+      } else {
+        input.classList.remove('disabled-input');
+      }
+    }
+
+    // Чтобы при загрузке страницы правильно установить цвета по текущему состоянию
+    window.onload = () => {
+      const npButtons = document.querySelectorAll('.np-button');
+      npButtons.forEach(btn => {
+        const inputId = btn.id.replace('np', '').replace(/^./, c => c.toLowerCase());
+        // Например npRubBefore -> rubBefore
+        const input = document.getElementById(inputId);
+        if (input) {
+          updateInputColor(input, btn.classList.contains('active'));
+          input.disabled = btn.classList.contains('active');
+        }
+      });
+    };
+
+    // Твой остальные функции генерации поста, очистки и копирования - оставь без изменений
     function generatePost() {
       const year = document.getElementById('yearInput').value;
       const title = document.getElementById('title').value.trim();
@@ -347,11 +527,21 @@
       const isFree = document.getElementById('btnFree').classList.contains('active');
       const isBiggest = document.getElementById('btnBiggest').classList.contains('active');
 
-      const rub = `${document.getElementById('rubBefore').value}₽ ➡️ ${document.getElementById('rubAfter').value}₽`;
-      const uah = `${document.getElementById('uahBefore').value}₴ ➡️ ${document.getElementById('uahAfter').value}₴`;
-      const eur = `${document.getElementById('eurBefore').value}€ ➡️ ${document.getElementById('eurAfter').value}€`;
-      const kzt = `${document.getElementById('kztBefore').value}₸ ➡️ ${document.getElementById('kztAfter').value}₸`;
+      function getPrice(beforeId, afterId, npBeforeId, npAfterId, symbol) {
+        const npBeforeActive = document.getElementById(npBeforeId).classList.contains('active');
+        const npAfterActive = document.getElementById(npAfterId).classList.contains('active');
 
+        const beforePrice = npBeforeActive ? 'н.п.' : document.getElementById(beforeId).value || '...';
+        const afterPrice = npAfterActive ? 'н.п.' : document.getElementById(afterId).value || '...';
+
+        return `${beforePrice}${symbol} ➡️ ${afterPrice}${symbol}`;
+      }
+
+      const rub = getPrice('rubBefore', 'rubAfter', 'npRubBefore', 'npRubAfter', '₽');
+      const uah = getPrice('uahBefore', 'uahAfter', 'npUahBefore', 'npUahAfter', '₴');
+      const eur = getPrice('eurBefore', 'eurAfter', 'npEurBefore', 'npEurAfter', '€');
+      const kzt = getPrice('kztBefore', 'kztAfter', 'npKztBefore', 'npKztAfter', '₸');
+      
       let priceBlock = '';
       if(isFree){
         // Формируем строку с отметками регионов
@@ -384,42 +574,34 @@
       document.getElementById('output').innerText = post;
     }
 
-    function clearFields() {
-      document.querySelectorAll('input, textarea').forEach(el => {
-        if (!el.classList.contains('extraDiscount') && !el.classList.contains('extraTitle')) {
-          el.value = '';
-          el.disabled = false;
-          el.style.backgroundColor = '';
-        }
-      });
-      document.querySelectorAll('.toggle-button, .extraToggleButton').forEach(btn => btn.classList.remove('active'));
-      document.querySelectorAll('.extraTitle, .extraDiscount').forEach(el => {
-        el.value = '';
-        el.disabled = true;
-        el.classList.add('disabled-input');
-      });
-      // Сброс регионов
-      Object.keys(regions).forEach(key => regions[key] = false);
-      updateRegionButtons();
-
-      document.getElementById('output').innerText = '';
-      document.getElementById('regionButtons').style.display = 'none';
+    function copyToClipboard() {
+      const output = document.getElementById('output').textContent;
+      if (!output) return alert('Пост пустой!');
+      navigator.clipboard.writeText(output).then(() => alert('Скопировано в буфер обмена!'));
     }
 
-    function copyToClipboard() {
-      const text = document.getElementById('output').innerText;
-      if(!text){
-        alert('Сначала сгенерируйте пост!');
-        return;
-      }
-      navigator.clipboard.writeText(text)
-        .then(() => alert('Скопировано в буфер обмена!'))
-        .catch(() => alert('Ошибка копирования'));
+    function clearFields() {
+      ['title','description','discount','rubBefore','rubAfter','uahBefore','uahAfter','eurBefore','eurAfter','kztBefore','kztAfter','date'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+          el.value = '';
+          el.disabled = false;
+          el.classList.remove('disabled-input');
+        }
+      });
+      // Сброс кнопок н.п.
+      document.querySelectorAll('.np-button.active').forEach(btn => btn.classList.remove('active'));
+      // Сброс toggle кнопок
+      ['btnBiggest','btnFree'].forEach(id => {
+        const btn = document.getElementById(id);
+        if (btn.classList.contains('active')) btn.classList.remove('active');
+      });
+      updateRegionButtons();
+      document.getElementById('output').textContent = '';
     }
 
     function goBackToMain() {
-      // Тут можно настроить переход на нужную страницу
-      window.location.href = 'index.html';
+      alert('Вернуться к главному меню — здесь можно добавить логику.');
     }
   </script>
 </body>
