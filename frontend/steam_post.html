@@ -575,7 +575,7 @@
     }
 
     function copyToClipboard() {
-      const output = document.getElementById('output').textContent;
+      const output = document.getElementById('output').innerText;
       if (!output) return alert('Пост пустой!');
       navigator.clipboard.writeText(output).then(() => alert('Скопировано в буфер обмена!'));
     }
