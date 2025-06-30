@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Майнкрафт Постер</title>
+    <style>
+      body {
+        font-family: "Segoe UI", sans-serif;
+        background-color: #1e1e2f;
+        color: #f0f0f0;
+        margin: 0;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      h1 {
+        font-size: 2em;
+        margin-bottom: 10px;
+        text-align: center;
+      }
+
+      .back-to-index {
+        align-self: flex-start;
+        background-color: #3c3c5c;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        text-decoration: none;
+        transition: background-color 0.2s;
+      }
+
+      .back-to-index:hover {
+        background-color: #505073;
+      }
+
+      .grid {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        width: 100%;
+        max-width: 900px;
+      }
+
+      .tool-card {
+        background-color: #2c2c3c;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        cursor: pointer;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        transition: transform 0.2s, background-color 0.2s;
+      }
+
+      .tool-card:hover {
+        background-color: #3a3a4a;
+        transform: translateY(-3px);
+      }
+
+      .tool-card h3 {
+        margin: 0 0 10px;
+        font-size: 1.3em;
+      }
+
+      .tool-card p {
+        font-size: 0.95em;
+        color: #aaa;
+      }
+
+      /* Стили уже подключенных блоков (скрываются/открываются JavaScript'ом) */
+      .hidden {
+        display: none;
+      }
+
+      .container {
+        max-width: 800px;
+        width: 100%;
+        background-color: #2c2c3c;
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        margin-top: 20px;
+      }
+
+      label {
+        display: block;
+        margin-top: 15px;
+        font-weight: bold;
+      }
+
+      input,
+      textarea {
+        width: 100%;
+        padding: 10px;
+        border: none;
+        border-radius: 6px;
+        font-size: 1em;
+        box-sizing: border-box;
+      }
+
+      textarea {
+        resize: vertical;
+        min-height: 100px;
+      }
+
+      button {
+        margin-top: 20px;
+        padding: 10px 20px;
+        background-color: #4caf50;
+        border: none;
+        color: white;
+        font-size: 1em;
+        border-radius: 6px;
+        cursor: pointer;
+      }
+
+      button:hover {
+        background-color: #45a049;
+      }
+
+      pre {
+        background-color: #151522;
+        padding: 15px;
+        border-radius: 8px;
+        white-space: pre-wrap;
+        font-family: monospace;
+        margin-top: 20px;
+        font-size: 0.95em;
+      }
+
+      .button-row {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      .back-button {
+        background-color: #3c3c5c;
+        margin-top: 30px;
+      }
+
+      .back-button:hover {
+        background-color: #505073;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Кнопка возврата -->
+    <a class="back-to-index" href="index.html">← Назад в главное меню</a>
+
+    <h1>🧱 Minecraft Постер</h1>
+
+    <!-- Главное меню шаблонов -->
+    <div id="mainMenu" class="grid">
+      <div class="tool-card" onclick="showTool('javaMod')">
+        <h3>🧱 Моды Minecraft (Java)</h3>
+        <p>Генератор постов с модами для Java Edition</p>
+      </div>
+
+      <div class="tool-card" onclick="showTool('javaTexture')">
+        <h3>🍃 Текстур паки Minecraft (Java)</h3>
+        <p>Создание постов о ресурспаках</p>
+      </div>
+
+      <div class="tool-card" onclick="showTool('bedrockMod')">
+        <h3>🛡️ Моды Minecraft (Bedrock)</h3>
+        <p>Посты о модах для Bedrock Edition</p>
+      </div>
+    </div>
+    <!-- Java Mod -->
+    <div id="javaMod" class="container hidden">
+      <h1>🧱 Пост: Minecraft Mod</h1>
+      <label>Название мода:</label>
+      <input type="text" id="modName" />
+      <label>Описание:</label>
+      <textarea id="modDesc"></textarea>
+      <label>Версии:</label>
+      <input type="text" id="modVersion" />
+      <div class="button-row">
+        <button onclick="generateJavaModPost()">Создать пост</button>
+        <button onclick="clearFields('modName','modDesc','modVersion')">
+          Очистить
+        </button>
+      </div>
+      <pre id="javaModOutput"></pre>
+      <button onclick="copyToClipboard('javaModOutput')">Скопировать</button>
+      <button class="back-button" onclick="goBack()">
+        🔙 Вернуться в меню
+      </button>
+    </div>
+
+    <!-- Java Texture -->
+    <div id="javaTexture" class="container hidden">
+      <h1>🍃 Пост: Minecraft Texture Pack</h1>
+      <label>Название ресурспака:</label>
+      <input type="text" id="packName" />
+      <label>Описание:</label>
+      <textarea id="packDesc"></textarea>
+      <label>Версии:</label>
+      <input type="text" id="packVersion" />
+      <div class="button-row">
+        <button onclick="generateTexturePost()">Создать пост</button>
+        <button onclick="clearFields('packName','packDesc','packVersion')">
+          Очистить
+        </button>
+      </div>
+      <pre id="textureOutput"></pre>
+      <button onclick="copyToClipboard('textureOutput')">Скопировать</button>
+      <button class="back-button" onclick="goBack()">
+        🔙 Вернуться в меню
+      </button>
+    </div>
+
+    <!-- Bedrock Mod -->
+    <div id="bedrockMod" class="container hidden">
+      <h1>🛡️ Пост: Bedrock Mod</h1>
+      <label>Название мода:</label>
+      <input type="text" id="bModName" />
+      <label>Описание:</label>
+      <textarea id="bModDesc"></textarea>
+      <label>Версия:</label>
+      <input type="text" id="bModVersion" />
+      <div class="button-row">
+        <button onclick="generateBedrockModPost()">Создать пост</button>
+        <button onclick="clearFields('bModName','bModDesc','bModVersion')">
+          Очистить
+        </button>
+      </div>
+      <pre id="bedrockOutput"></pre>
+      <button onclick="copyToClipboard('bedrockOutput')">Скопировать</button>
+      <button class="back-button" onclick="goBack()">
+        🔙 Вернуться в меню
+      </button>
+    </div>
+    <script>
+      function showTool(toolId) {
+        document.getElementById("mainMenu").classList.add("hidden");
+        ["javaMod", "javaTexture", "bedrockMod"].forEach((id) => {
+          const el = document.getElementById(id);
+          if (el) el.classList.add("hidden");
+        });
+        const target = document.getElementById(toolId);
+        if (target) target.classList.remove("hidden");
+      }
+
+      function goBack() {
+        ["javaMod", "javaTexture", "bedrockMod"].forEach((id) => {
+          const el = document.getElementById(id);
+          if (el) el.classList.add("hidden");
+        });
+        document.getElementById("mainMenu").classList.remove("hidden");
+      }
+
+      function clearFields(...ids) {
+        ids.forEach((id) => (document.getElementById(id).value = ""));
+        const outputs = ["javaModOutput", "textureOutput", "bedrockOutput"];
+        outputs.forEach((id) => {
+          const out = document.getElementById(id);
+          if (out) out.innerText = "";
+        });
+      }
+
+      function copyToClipboard(id) {
+        const output = document.getElementById(id)?.innerText;
+        if (output) {
+          navigator.clipboard.writeText(output).then(() => {
+            alert("Пост скопирован в буфер обмена!");
+          });
+        }
+      }
+
+      // Функция для генерации поста Java мод
+      function generateJavaModPost() {
+        const name = document.getElementById("modName").value.trim();
+        const desc = document.getElementById("modDesc").value.trim();
+        const version = document.getElementById("modVersion").value.trim();
+
+        if (!name || !desc || !version) {
+          alert("Пожалуйста, заполните все поля.");
+          return;
+        }
+
+        const post = `🧱 **Мод:** \`${name}\`
+📖 **Описание:** 
+${desc}
+
+🌀 Версии: **${version}**
+📦 **Minecraft Java Mod**
+
+📥 **Скачать мод:** 
+👉 Curseforge
+👉 Minecraft Inside
+
+📌 **@darknitennews | 💬 Чат | #мод**`;
+
+        document.getElementById("javaModOutput").innerText = post;
+      }
+
+      // Функция для генерации поста Texture Pack
+      function generateTexturePost() {
+        const name = document.getElementById("packName").value.trim();
+        const desc = document.getElementById("packDesc").value.trim();
+        const version = document.getElementById("packVersion").value.trim();
+
+        if (!name || !desc || !version) {
+          alert("Пожалуйста, заполните все поля.");
+          return;
+        }
+
+        const post = `🍃 **Текстур пак:** \`${name}\`
+📖 **Описание:** 
+${desc}
+
+🌀 Версии: **${version}**
+📦 **Minecraft Java Texture Pack**
+
+📥 **Скачать:** 
+👉 Curseforge
+👉 Minecraft Inside
+
+📌 **@darknitennews | 💬 Чат | #текстуры**`;
+
+        document.getElementById("textureOutput").innerText = post;
+      }
+
+      // Функция для генерации поста Bedrock мод
+      function generateBedrockModPost() {
+        const name = document.getElementById("bModName").value.trim();
+        const desc = document.getElementById("bModDesc").value.trim();
+        const version = document.getElementById("bModVersion").value.trim();
+
+        if (!name || !desc || !version) {
+          alert("Пожалуйста, заполните все поля.");
+          return;
+        }
+
+        const post = `🛡️ **Мод:** \`${name}\`
+📖 **Описание:** 
+${desc}
+
+🌀 Версия: **${version}**
+📦 **Minecraft Bedrock Mod**  
+📥 **Файл для скачивания:** 
+👇 (прикреплён ниже)
+
+📌 **@darknitennews | 💬 Чат | #мод**`;
+
+        document.getElementById("bedrockOutput").innerText = post;
+      }
+    </script>
+  </body>
+</html>
