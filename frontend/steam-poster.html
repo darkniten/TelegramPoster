@@ -341,10 +341,10 @@
       <textarea id="description" placeholder="Описание игры"></textarea>
 
       <label>📈 Пик онлайна за 24ч:</label>
-      <input type="number" id="peakOnline" placeholder="например, 14911" />
+      <input type="number" id="peakOnline" placeholder="Пик онлайна за 24ч" />
 
       <label>🏷️ Теги игры (через пробел):</label>
-      <input type="text" id="gameTags" placeholder="например, survival action indie" />
+      <input type="text" id="gameTags" placeholder="например: survival action indie" />
 
       
       <label>💥 Процент скидки:</label>
@@ -769,6 +769,15 @@
           const t = block.querySelector(".extraTitle").value.trim();
           const d = block.querySelector(".extraDiscount").value.trim();
           const isActive = !block.querySelector(".extraTitle").disabled;
+
+          if (peakOnline) {
+            post += `\n\n📈 Пик онлайна за 24ч: ${peakOnline}`;
+          }
+          if (gameTags) {
+            post += `\n🏷️ Теги: ${gameTags}`;
+          }
+
+          
           if (isActive && t && d) {
             extras.push(`${t} | -${d}%`);
           }
@@ -910,4 +919,5 @@
     </script>
   </body>
 </html>
+
 
