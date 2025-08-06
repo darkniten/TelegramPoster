@@ -774,14 +774,6 @@
           const t = block.querySelector(".extraTitle").value.trim();
           const d = block.querySelector(".extraDiscount").value.trim();
           const isActive = !block.querySelector(".extraTitle").disabled;
-
-          if (peakOnline) {
-            post += `\n\n📈 Пик онлайна за 24ч: ${peakOnline}`;
-          }
-          if (gameTags) {
-            post += `\n🏷️ Теги: ${gameTags}`;
-          }
-
           
           if (isActive && t && d) {
             extras.push(`${t} | -${d}%`);
@@ -824,6 +816,8 @@
           "kztBefore",
           "kztAfter",
           "date",
+          "peakOnline",
+          "gameTags",
         ].forEach((id) => {
           const el = document.getElementById(id);
           if (el) {
@@ -918,6 +912,7 @@
     </script>
   </body>
 </html>
+
 
 
 
