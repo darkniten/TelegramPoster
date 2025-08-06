@@ -680,119 +680,87 @@
       };
 
       // Твой остальные функции генерации поста, очистки и копирования - оставь без изменений
-      function generatePost() {
-      let post = `${selectedSticker ? selectedSticker + " " : ""}\`${title}\`\n${desc}`;
-      
-      if (peakOnline) {
-        post += `\n\nПик онлайна за 24ч: ${peakOnline}`;
-      }
-      if (gameTags) {
-        post += `\nТеги: ${gameTags}`;
-      }
-      
-      post += `\n\n${priceBlock}\n\n🕒 Акция до: **${date}.${year}**`;
+function generatePost() {
+  const year = document.getElementById("yearInput").value;
+  const title = document.getElementById("title").value.trim();
+  const desc = document.getElementById("description").value.trim();
+  const discount = document.getElementById("discount").value.trim();
+  const date = document.getElementById("date").value.trim();
+  const peakOnline = document.getElementById("peakOnline").value.trim();
+  const gameTagsRaw = document.getElementById("gameTags").value.trim();
+  const gameTags = gameTagsRaw
+    .split(/\s+/)
+    .filter(tag => tag.length > 0)
+    .map(tag => `#${tag}`)
+    .join(" ");
+  const isFree = document.getElementById("btnFree").classList.contains("active");
+  const isBiggest = document.getElementById("btnBiggest").classList.contains("active");
 
+  function getPrice(beforeId, afterId, npBeforeId, npAfterId, symbol) {
+    const npBeforeActive = document.getElementById(npBeforeId).classList.contains("active");
+    const npAfterActive = document.getElementById(npAfterId).classList.contains("active");
 
+    const beforePrice = npBeforeActive
+      ? "н.п."
+      : document.getElementById(beforeId).value || "...";
+    const afterPrice = npAfterActive
+      ? "н.п."
+      : document.getElementById(afterId).value || "...";
 
-        const year = document.getElementById("yearInput").value;
-        const title = document.getElementById("title").value.trim();
-        const desc = document.getElementById("description").value.trim();
-        const discount = document.getElementById("discount").value.trim();
-        const date = document.getElementById("date").value.trim();
-        const isFree = document
-          .getElementById("btnFree")
-          .classList.contains("active");
-        const isBiggest = document
-          .getElementById("btnBiggest")
-          .classList.contains("active");
+    return `${beforePrice}${symbol} ➡️ ${afterPrice}${symbol}`;
+  }
 
-        function getPrice(beforeId, afterId, npBeforeId, npAfterId, symbol) {
-          const npBeforeActive = document
-            .getElementById(npBeforeId)
-            .classList.contains("active");
-          const npAfterActive = document
-            .getElementById(npAfterId)
-            .classList.contains("active");
+  const rub = getPrice("rubBefore", "rubAfter", "npRubBefore", "npRubAfter", "₽");
+  const uah = getPrice("uahBefore", "uahAfter", "npUahBefore", "npUahAfter", "₴");
+  const eur = getPrice("eurBefore", "eurAfter", "npEurBefore", "npEurAfter", "€");
+  const kzt = getPrice("kztBefore", "kztAfter", "npKztBefore", "npKztAfter", "₸");
 
-          const beforePrice = npBeforeActive
-            ? "н.п."
-            : document.getElementById(beforeId).value || "...";
-          const afterPrice = npAfterActive
-            ? "н.п."
-            : document.getElementById(afterId).value || "...";
+  let priceBlock = "";
+  if (isFree) {
+    const regionMarks = [];
+    regionMarks.push(regions.regionRub ? "✅₽" : "❌₽");
+    regionMarks.push(regions.regionUah ? "✅₴" : "❌₴");
+    regionMarks.push(regions.regionEur ? "✅€" : "❌€");
+    regionMarks.push(regions.regionKzt ? "✅₸" : "❌₸");
 
-          return `${beforePrice}${symbol} ➡️ ${afterPrice}${symbol}`;
-        }
+    priceBlock = `💥 Игра сейчас **БЕСПЛАТНА**\n${regionMarks.join("   ")}`;
+  } else {
+    priceBlock = `💸 **СКИДКА -${discount}%:**\n\`${rub}\`\n\`${uah}\`\n\`${eur}\`\n\`${kzt}\``;
+  }
 
-        const rub = getPrice(
-          "rubBefore",
-          "rubAfter",
-          "npRubBefore",
-          "npRubAfter",
-          "₽"
-        );
-        const uah = getPrice(
-          "uahBefore",
-          "uahAfter",
-          "npUahBefore",
-          "npUahAfter",
-          "₴"
-        );
-        const eur = getPrice(
-          "eurBefore",
-          "eurAfter",
-          "npEurBefore",
-          "npEurAfter",
-          "€"
-        );
-        const kzt = getPrice(
-          "kztBefore",
-          "kztAfter",
-          "npKztBefore",
-          "npKztAfter",
-          "₸"
-        );
+  let post = `${selectedSticker ? selectedSticker + " " : ""}\`${title}\`\n${desc}`;
 
-        let priceBlock = "";
-        if (isFree) {
-          // Формируем строку с отметками регионов
-          const regionMarks = [];
-          regionMarks.push(regions.regionRub ? "✅₽" : "❌₽");
-          regionMarks.push(regions.regionUah ? "✅₴" : "❌₴");
-          regionMarks.push(regions.regionEur ? "✅€" : "❌€");
-          regionMarks.push(regions.regionKzt ? "✅₸" : "❌₸");
+  if (peakOnline) {
+    post += `\n\n📈 Пик онлайна за 24ч: ${peakOnline}`;
+  }
+  if (gameTags) {
+    post += `\n🏷️ Теги: ${gameTags}`;
+  }
 
-          priceBlock = `💥 Игра сейчас **БЕСПЛАТНА**\n${regionMarks.join(
-            "   "
-          )}`;
-        } else {
-          priceBlock = `💸 **СКИДКА -${discount}%:**\n\`${rub}\`\n\`${uah}\`\n\`${eur}\`\n\`${kzt}\``;
-        }
+  post += `\n\n${priceBlock}\n\n🕒 Акция до: **${date}.${year}**`;
 
-        let extras = [];
-        document.querySelectorAll(".extraGameBlock").forEach((block) => {
-          const t = block.querySelector(".extraTitle").value.trim();
-          const d = block.querySelector(".extraDiscount").value.trim();
-          const isActive = !block.querySelector(".extraTitle").disabled;
-          
-          if (isActive && t && d) {
-            extras.push(`${t} | -${d}%`);
-          }
-        });
+  if (isBiggest) post += "\n\n📉 Самая большая скидка за 2 года!";
 
-        let post = `${selectedSticker ? selectedSticker + " " : ""}\`${title}\`\n${desc}`;
-      
-        
-        post += `\n\n${priceBlock}\n\n🕒 Акция до: **${date}.${year}**`;
+  let extras = [];
+  document.querySelectorAll(".extraGameBlock").forEach((block) => {
+    const t = block.querySelector(".extraTitle").value.trim();
+    const d = block.querySelector(".extraDiscount").value.trim();
+    const isActive = !block.querySelector(".extraTitle").disabled;
 
+    if (isActive && t && d) {
+      extras.push(`${t} | -${d}%`);
+    }
+  });
 
-        if (isBiggest) post += "\n\n📉 Самая большая скидка за 2 года!";
-        if (extras.length)
-          post += `\n\n📌 Также по акции:\n${extras.join("\n")}`;
-        post += "\n\n🔗 Открыть в Steam\n\n**📌 Скидки, халява, новости** — @steam_ed";
+  if (extras.length) {
+    post += `\n\n📌 Также по акции:\n${extras.join("\n")}`;
+  }
 
-        document.getElementById("output").innerText = post;
-      }
+  post += `\n\n🔗 Открыть в Steam\n\n📌 Скидки, халява, новости — @steam_ed`;
+
+  document.getElementById("output").innerText = post;
+}
+
 
       function copyToClipboard() {
         const output = document.getElementById("output").innerText;
@@ -912,6 +880,7 @@
     </script>
   </body>
 </html>
+
 
 
 
